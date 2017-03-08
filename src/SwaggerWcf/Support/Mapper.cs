@@ -338,12 +338,30 @@ namespace SwaggerWcf.Support
             string description = settings != null ? settings.Description : null;
             bool required = settings != null && settings.Required;
             string name = parameter.Name;
-            DataMemberAttribute dataMemberAttribute = parameter.GetCustomAttribute<DataMemberAttribute>();
 
-            if (dataMemberAttribute != null && !string.IsNullOrEmpty(dataMemberAttribute.Name))
-                name = dataMemberAttribute.Name;
+			//Check for set DataContractAttribute to set Name and - Should this check for, and set DataContractAttribute.Namespace as well? /GustafRG
+			//DataContractAttribute was not accessible on parameter, but on parameter.ParameterType. /GustafRG
+			DataContractAttribute dataContractAttribute = parameter.ParameterType.GetCustomAttribute<DataContractAttribute>();
+			if (dataContractAttribute != null)
+			{
+				if (!string.IsNullOrEmpty(dataContractAttribute.Name))
+				{
+					name = dataContractAttribute.Name;
+				}
+				else
+				{
+					name = parameter.ParameterType.Name;
+				}
 
-            InType inType = GetInType(uriTemplate, parameter.Name);
+			}
+
+			//Removed this. DataMemberAttribute is not valid on Object, Only on Object Members. Also, it does not seem to be accessible on "parameter" /GustafRG
+			//DataMemberAttribute dataMemberAttribute = parameter.ParameterType.GetCustomAttribute<DataMemberAttribute>();
+
+			//         if (dataMemberAttribute != null && !string.IsNullOrEmpty(dataMemberAttribute.Name))
+			//             name = dataMemberAttribute.Name;
+
+			InType inType = GetInType(uriTemplate, parameter.Name);
             if (inType == InType.Path)
                 required = true;
 

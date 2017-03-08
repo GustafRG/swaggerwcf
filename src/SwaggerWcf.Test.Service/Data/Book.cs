@@ -4,7 +4,7 @@ using SwaggerWcf.Attributes;
 
 namespace SwaggerWcf.Test.Service.Data
 {
-    [DataContract]
+    [DataContract(Name = "FooBook")]
     [Description("Book with title, first publish date, author and language")]
     [SwaggerWcfDefinition(ExternalDocsUrl = "http://en.wikipedia.org/wiki/Book", ExternalDocsDescription = "Description of a book")]
     public class Book
@@ -13,7 +13,7 @@ namespace SwaggerWcf.Test.Service.Data
         [Description("Book ID")]
         public string Id { get; set; }
 
-        [DataMember]
+        [DataMember(Name = "BarTitle")]
         [Description("Book Title")]
         public string Title { get; set; }
 
